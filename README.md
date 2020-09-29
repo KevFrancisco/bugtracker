@@ -10,7 +10,6 @@ One of the problems I faced in previous projects was I forgot issues quite often
 
 I also tracked bugs and feature requests to Bug Tracker _using itself_, which I think is really, really cool!
 
----
 ## Features
 * Demo user login - Want to try out Bug Tracker quickly? Use one of the demo accounts provided.
 * Charts by Google Visualization API - to easily see which projects have the most tickets.
@@ -22,7 +21,6 @@ I also tracked bugs and feature requests to Bug Tracker _using itself_, which I 
     * _For best results, use a transparent png file without whitspace borders._
 * Search box in ticket list - search for the issue you want, fast!
 
----
 ## Structure
 
 The main object in Bug Tracker are tickets, which lists all the details regarding an issue. Contrary to it's name, a ticket can be of other types aside from a Bug Report. It also has other relevant properties like status, and priority.
