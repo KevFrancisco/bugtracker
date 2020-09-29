@@ -11,15 +11,15 @@ One of the problems I faced in previous projects was I forgot issues quite often
 I also tracked bugs and feature requests to Bug Tracker _using itself_, which I think is really, really cool!
 
 ## Features
-* Demo user login - Want to try out Bug Tracker quickly? Use one of the demo accounts provided.
-* Charts by Google Visualization API - to easily see which projects have the most tickets.
+* __Demo user login__ - Want to try out Bug Tracker quickly? Use one of the demo accounts provided.
+* __Charts by Google Visualization API__ - to easily see which projects have the most tickets.
     * Clicking a section in the charts takes you to the relevant ticket list.
-* Critical priority tickets in the front page - know which issues to work on first
-* Resolved tickets in the front page - see the most recent issues resolved
-* Masonry layout in the projects page - because it's beautiful, and why not :D
+* __Critical priority tickets in the front page__ - know which issues to work on first
+* __Resolved tickets in the front page__ - see the most recent issues resolved
+* __Masonry layout in the projects page__ - because it's beautiful, and why not :D
     * Complete with an identifying image.
     * _For best results, use a transparent png file without whitspace borders._
-* Search box in ticket list - search for the issue you want, fast!
+* __Search box in ticket list__ - search for the issue you want, fast!
 
 ## Structure
 
