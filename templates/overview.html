@@ -68,16 +68,16 @@ Color List:
                 {% for p in projectslist %}
                     [
                         '{{ p.proj_name }}',
-                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
+                        {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', '==', 'Bug Report')|list|count }},
                         'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
                         '/tickets/search/{{ p.proj_id }}/type/Bug Report',
-                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Feature Request')|list|count }}, 
+                        {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', '==', 'Feature Request')|list|count }}, 
                         'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
                         '/tickets/search/{{ p.proj_id }}/type/Feature Request',
-                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Other Comments')|list|count }}, 
+                        {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', '==', 'Other Comments')|list|count }}, 
                         'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
                         '/tickets/search/{{ p.proj_id }}/type/Other Comments',
-                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Documentation Request')|list|count }},
+                        {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', '==', 'Documentation Request')|list|count }},
                         'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
                         '/tickets/search/{{ p.proj_id }}/type/Documentation Request'
                     ],
@@ -188,7 +188,7 @@ Color List:
             {% for p in projectslist %}
             [
                 '{{ p.proj_name }}',
-                {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
+                {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
                 '/tickets/search/{{ p.proj_id }}/type/Bug Report',
                 'cursor: pointer; stroke-color: #FFFFFF; stroke-width: 2;'
             ],
@@ -436,6 +436,7 @@ $(document).ready(function () {
     $('.slim-scroll').slimScroll({
         height: "350px",
     });
+    $(".slimScrollBar").hide()
 });
 </script>
 
@@ -445,7 +446,7 @@ $(document).ready(function () {
 
 {# USER GUIDE: Modal Window #}
 <div class="modal fade" tabindex="-1" role="dialog" id="user-guide-modal">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">User Guide</h5>
@@ -453,13 +454,75 @@ $(document).ready(function () {
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Sapien eget mi proin sed libero enim sed. Gravida rutrum quisque non tellus orci ac auctor augue. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Lectus sit amet est placerat in.
-        </p>
-        <p>
-            Urna id volutpat lacus laoreet non curabitur gravida arcu. Habitasse platea dictumst quisque sagittis. Magna sit amet purus gravida quis blandit turpis cursus. Porttitor rhoncus dolor purus non enim praesent elementum. Vel facilisis volutpat est velit. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus. Accumsan lacus vel facilisis volutpat est velit egestas dui. Pulvinar sapien et ligula ullamcorper malesuada. Tortor consequat id porta nibh venenatis.
-        </p>
+      <div class="modal-body text-left">
+        <h4 class="mb-4">Welcome to Bug Tracker!</h4>
+        <p>See the full documentation <a href="">here</a>.
+        <p>In the overview page, tickets shown in the column chart are organized by type, and the project they are filed in.</p>
+        <p>Click on the column section to go to the tickets page.</p>
+        <p>The ticket list is filtered depending on which Ticket type and Project you choose.</p>
+        <p>Critical priority tickets are shown in the overview page, along with Resolved tickets.</p>
+        <p>See the table below regarding User permissions.</p>
+        <div class="mx-5">
+            <table class="table table-dark">
+                <thead>
+                    <th class="bg-primary bg-texture-1 text-center border border-darker">
+                        Role
+                    </th>
+                    <th class="bg-primary bg-texture-1 text-center border border-darker">
+                        Permissions
+                    </th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="lead align-top text-center border border-darker">
+                            Admin
+                        </td>
+                        <td class="border border-darker">
+                            <ul>
+                                <li>Create Projects</li>
+                                <li>Submit Tickets</li>
+                                <li>Be assigned to tickets</li>
+                                <li>Resolve Tickets</li>
+                                <li>Delete Users</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lead align-top text-center border border-darker">
+                            Project Manager
+                        </td>
+                        <td class="border border-darker">
+                            <ul>
+                                <li>Create Projects</li>
+                                <li>Delete Projects</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lead align-top text-center border border-darker">
+                            Developer
+                        </td>
+                        <td class="border border-darker">
+                            <ul>
+                                <li>Be assigned to tickets</li>
+                                <li>Resolve Tickets</li>
+                                <li>Delete Tickets</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="lead align-top text-center border border-darker">
+                            Submitter
+                        </td>
+                        <td class="border border-darker">
+                            <ul>
+                                <li>Submit new tickets</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
@@ -530,6 +593,7 @@ $(document).ready(function () {
                                 <th class="border border-darker py-2 w-100">Ticket</th>
                                 <th class="border border-darker py-2 text-center">Type</th>
                                 <th class="border border-darker py-2 text-center">Status</th>
+                                <th class="border border-darker py-2 text-center">Date</th>
                             </tr>
                         </thead>
                         <tbody class="small">
@@ -545,6 +609,9 @@ $(document).ready(function () {
                                 </td>
                                 <td class="border border-darker py-1 text-center align-middle">
                                         {{ t.tck_status }}
+                                </td>
+                                <td class="border border-darker py-1 text-nowrap text-center">
+                                        {{ t.tck_created.strftime("%m-%d-%y") }}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -565,10 +632,11 @@ $(document).ready(function () {
                                 <th class="border border-darker py-2 w-100">Ticket</th>
                                 <th class="border border-darker py-2 text-center">Type</th>
                                 <th class="border border-darker py-2 text-center">Status</th>
+                                <th class="border border-darker py-2 text-center">Date</th>
                             </tr>
                         </thead>
                         <tbody class="small">
-                            {% for t in ticketslist | sort(attribute='tck_created') if t.tck_status == 'Resolved' %}
+                            {% for t in ticketslist | sort(attribute='tck_created', reverse=True) if t.tck_status == 'Resolved' %}
                             <tr>
                                 <td class="border border-darker py-1 align-middle">
                                     <a href="/manage_ticket/{{ t.tck_id }}">
@@ -580,6 +648,9 @@ $(document).ready(function () {
                                 </td>
                                 <td class="border border-darker py-1 text-center align-middle">
                                         {{ t.tck_status }}
+                                </td>
+                                <td class="border border-darker py-1 text-nowrap text-center">
+                                        {{ t.tck_created.strftime("%m-%d-%y") }}
                                 </td>
                             </tr>
                             {% endfor %}

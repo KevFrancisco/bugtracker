@@ -118,7 +118,8 @@ $(document).ready(function () {
                 
                 <div class="form-row">
                     <div class="form-group my-3 col text-center">
-                        <button id="bv-submit" class="btn btn-primary d-inline-block" type="submit">File Ticket</button>
+                        <a class="btn btn-danger d-inline-block mr-3" href="/manage_ticket/delete/{{ thisticket.tck_id }}">Delete Ticket</a>
+                        <button id="bv-submit" class="btn btn-success d-inline-block" type="submit">Save Ticket</button>
                     </div>
                 </div>
             </form>

@@ -189,3 +189,7 @@ g path, g { cursor: pointer; }
 .text-shadow-2 {
   text-shadow: 2px 2px 0.15em black;
 }
+
+.img-flip-hor {
+  transform: scaleX(-1);
+}

@@ -240,8 +240,13 @@ def overview_main():
 def projects_main():
     """ Show Overview of all projects """
     projectslist = Project.query.all()
+    msg_error=request.args.get('msg_error')
+    msg_success=request.args.get('msg_success')
+
     return render_template("/projects/manage_projects.html", 
-                            projectslist=projectslist)
+                            projectslist=projectslist,
+                            msg_success=msg_success,
+                            msg_error=msg_error)
 
 
 @app.route("/projects/new", methods=["GET", "POST"])
@@ -251,7 +256,11 @@ def projects_new():
     if request.method == "POST":
         # Add the project to the database
         # Get New Project details. No need to put guard clauses
-        # Forms are verified client side via bootstrap-validate library 
+        # Forms are verified client side via bootstrap-validate library
+
+        if session["user_role"] not in ["Admin", "Project Manager"]:
+            msg_error = "Project not logged. Only User\'s with the Admin or Project Manager Role may create new Projects"
+            return redirect(url_for('projects_main', msg_error=msg_error))
 
         # Alias the data the user submitted
         new_proj_name = request.form.get("f_proj_name")
@@ -299,7 +308,13 @@ def projects_new():
     else:
         # Create new project page
         userlist = User.query.filter((User.user_role=="Project Manager") | (User.user_role=="Admin")).all()
+        
+        msg_error = str()
+        if session["user_role"] not in ["Admin", "Project Manager"]:
+            msg_error = "Only User\'s with the Admin or Project Manager Role may create new Projects"
+
         return render_template("/projects/project_new.html",
+                                msg_error=msg_error,
                                 userlist=userlist)
 
 @app.route("/manage_project/<int:url_proj_id>", methods=["GET", "POST"])
@@ -350,7 +365,7 @@ def manage_project(url_proj_id):
 def delete_project(url_proj_id):
 
     """ DELETE Project """
-    if session["user_role"] == "Admin":
+    if session["user_role"] in ["Admin", "Project Manager"]:
 
         # No need to set relationships (orphaned projects and messages) to null, the ORM handles relationships
         # The relationships were set to Nullable=True in models to be safe
@@ -385,7 +400,11 @@ def delete_project(url_proj_id):
 def tickets_main():
     """ Show Overview of all Tickets """
     ticketslist = Ticket.query.order_by(Ticket.tck_created.desc()).all()
-    return render_template("/tickets/manage_tickets.html", 
+    msg_error=request.args.get('msg_error')
+    msg_success=request.args.get('msg_success')
+    return render_template("/tickets/manage_tickets.html",
+                            msg_error=msg_error,
+                            msg_success=msg_success,
                             ticketslist=ticketslist)
 
 @app.route("/tickets/search/<string:tck_column>/<string:str_q>")
@@ -431,6 +450,9 @@ def ticktets_new():
         # Add the ticket to the database
         # Get New Ticket details. No need to put guard clauses
         # Forms are verified client side via bootstrap-validate library 
+        if session["user_role"] not in ["Admin", "Submitter"] :
+            msg_error = "Ticket NOT logged. Only User\'s with the Admin or Submitter Role may log new Tickets"
+            return redirect(url_for('tickets_main', msg_error=msg_error))
 
         projectslist = Project.query.all()
         ticketslist = Ticket.query.order_by(Ticket.tck_created.desc()).all()
@@ -475,10 +497,15 @@ def ticktets_new():
         devuserlist = User.query.filter((User.user_role=="Developer") | (User.user_role=="Admin")).all()
         projectslist = Project.query.all()
 
+        msg_error = str()
+        if session["user_role"] not in ["Admin", "Submitter"]:
+            msg_error = "Only User\'s with the Admin or Submitter Role may log new Tickets"
+
         return render_template("/tickets/ticket_new.html",
                                 thisuserid=session["user_id"],
                                 projectslist=projectslist,
                                 subuserlist=subuserlist,
+                                msg_error=msg_error,
                                 devuserlist=devuserlist)
 
 
@@ -502,30 +529,29 @@ def manage_ticket(url_tck_id):
         thisticket.tck_desc = request.form.get("f_tck_desc")
         thisticket.tck_type = request.form.get("f_tck_type")
         thisticket.tck_prio = request.form.get("f_tck_prio")
-        thisticket.tck_status = request.form.get("f_tck_status")
         thisticket.tck_submitter = request.form.get("f_tck_submitter")
         thisticket.tck_developer = request.form.get("f_tck_developer")
-
+        # Authorization, only Admin and Developer can Resolve tickets
+        msg_error = str()
+        if request.form.get("f_tck_status") == "Resolved":
+            if session["user_role"] in ["Admin", "Developer"]:
+                thisticket.tck_status = request.form.get("f_tck_status")
+            else:
+                msg_error= "Only User\'s with Admin or Developer Roles can update tickets as \'Resolved\'"
         # Always do db.session.commit() to save changes
         db.session.commit()
 
         msg_success = "Ticket updated."
-        subuserlist = User.query.filter((User.user_role=="Submitter") | (User.user_role=="Admin")).all()
-        devuserlist = User.query.filter((User.user_role=="Developer") | (User.user_role=="Admin")).all()
 
-        return render_template("/tickets/manage_tickets.html",
-                                thisuserid=session["user_id"],
-                                thisticket=thisticket,
-                                projectslist=projectslist,
-                                subuserlist=subuserlist,
-                                devuserlist=devuserlist,
-                                ticketslist=ticketslist)
+        subuserlist = User.query.filter((User.user_role=="Submitter") | (User.user_role=="Admin")).all()
+        return redirect(url_for('tickets_main', msg_success=msg_success, msg_error=msg_error))
+
     else:
         # Create new ticket page
         subuserlist = User.query.filter((User.user_role=="Submitter") | (User.user_role=="Admin")).all()
         devuserlist = User.query.filter((User.user_role=="Developer") | (User.user_role=="Admin")).all()
         projectslist = Project.query.all()
-        thisuserid = session["user_id"]
+        
         return render_template("/tickets/manage_ticket.html",
                                 thisuserid = session["user_id"],
                                 thisticket=thisticket,
@@ -538,7 +564,7 @@ def manage_ticket(url_tck_id):
 def delete_ticket(url_tck_id):
 
     """ DELETE Ticket """
-    if session["user_role"] == "Admin":
+    if session["user_role"] in ["Admin", "Developer"]:
 
         # No need to set relationships (orphaned tickets and messages) to null, the ORM handles relationships
         # The relationships were set to Nullable=True in models to be safe
@@ -578,10 +604,14 @@ def manage_users():
     """ Show Overview of all Users """
     # Get a list of users
     userlist = User.query.all()
+    msg_error=request.args.get('msg_error')
+    msg_success=request.args.get('msg_success')
 
     return render_template("/users/manage_users.html", 
                             user_id=session["user_id"],
-                            userlist=userlist)
+                            userlist=userlist,
+                            msg_error=msg_error,
+                            msg_success=msg_success)
 
 
 @app.route("/manage_user/<int:url_user_id>", methods=["GET", "POST"])
@@ -623,10 +653,7 @@ def manage_user(url_user_id):
         db.session.commit()
         # Safe to use f-string here bec we validated via javascript
         msg_success = f"User {user.user_name} updated!"
-        return render_template("/users/manage_user.html",
-                                userlist=userlist,
-                                user=user,
-                                msg_success=msg_success)
+        return redirect(url_for('manage_users', msg_success=msg_success))
 
     else:
         # Get User table list for the sidebar

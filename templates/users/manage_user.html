@@ -65,9 +65,9 @@
                         <div class="hidden-overflow">
                             <select name="f_user_role" class="form-control" id="f_user_role" size="5" required>
                                 <option value="Admin" {{ "selected='selected'" if user['user_role'] == 'Admin' else '' }}>Admin</option>
-                                <option value="Submitter" {{ "selected='selected'" if user['user_role'] == 'Submitter' else '' }}>Submitter</option>
-                                <option value="Developer" {{ "selected='selected'" if user['user_role'] == 'Developer' else '' }}>Developer</option>
                                 <option value="Project Manager" {{ "selected='selected'" if user['user_role'] == 'Project Manager' else '' }}>Project Manager</option>
+                                <option value="Developer" {{ "selected='selected'" if user['user_role'] == 'Developer' else '' }}>Developer</option>
+                                <option value="Submitter" {{ "selected='selected'" if user['user_role'] == 'Submitter' else '' }}>Submitter</option>
                             </select>
                         </div>
                     </div>

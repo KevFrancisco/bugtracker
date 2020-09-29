@@ -43,6 +43,7 @@
                         <th class="border border-darker py-2 w-100">Ticket</th>
                         <th class="border border-darker py-2 text-center">Type</th>
                         <th class="border border-darker py-2 text-center">Status</th>
+                        <th class="border border-darker py-2 text-center">Date Filed</th>
                     </tr>
                 </thead>
                 <tbody class="small py-1">
@@ -58,6 +59,9 @@
                         </td>
                         <td class="border border-darker py-1 text-nowrap text-center">
                                 {{ t.tck_status }}
+                        </td>
+                        <td class="border border-darker py-1 text-nowrap text-center">
+                                {{ t.tck_created.strftime("%b %d, %Y") }}
                         </td>
                     </tr>
                     {% endfor %}
