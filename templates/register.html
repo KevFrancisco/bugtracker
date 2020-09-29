@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<script src="/static/js/bootstrap-validate.js"></script>
+{% endblock %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    {% if error %}
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oh snap!</strong> {{ error }}
+    </div>
+    {% endif %}
+    <div class="row">
+    
+    <div class="col-md bg-secondary p-5 border-radius-slanted my-auto mx-3">
+        <div class="my-auto">
+            <img src="/static/svg/register-illustration.svg">
+        </div>
+    </div>
+    
+    <div class="col-md-5 my-auto mx-3">
+        <div class="mb-3 mt-3">
+            <h3 class="mb-0">Create Account<img class="mb-1 ml-2" src="/static/svg/register-icon.svg" height="28" width="28"></h3>
+        </div>
+
+        <form action="/register" method="post" class="form-signin text-left needs-validation" id="registerform">
+
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_user_name" class="mb-1">Username</label>
+                    <input autocomplete="off" autofocus class="form-control" name="f_user_name" placeholder="Username" type="text" id="f_user_name" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_user_email" class="mb-1">Email</label>
+                    <input autocomplete="off" autofocus class="form-control" name="f_user_email" placeholder="Email" type="text" id="f_user_email" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_user_password" class="mb-1">Password</label>
+                    <input class="form-control" name="f_user_password" placeholder="Password" type="password" id="f_user_password" required>
+                </div>
+                <div class="form-group col my-1">
+                    <label for="f_user_confirmation" class="mb-1">Confirm Password</label>
+                    <input class="form-control" name="f_user_confirmation" placeholder="Confirm Password" type="password" id="f_user_confirmation" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_user_first_name" class="mb-1">First Name</label>
+                    <input class="form-control" name="f_user_first_name" placeholder="First Name" type="text" id="f_user_first_name" required>
+                </div>
+                <div class="form-group col my-1">
+                    <label for="f_user_last_name" class="mb-1">Last Name</label>
+                    <input class="form-control" name="f_user_last_name" placeholder="Last Name" type="text" id="f_user_last_name" required>
+                </div>
+            </div>
+            
+            
+            <div class="form-row">
+                <div class="form-group col w-100 my-1">
+                    <label for="f_user_role" class="mb-1">Role</label>
+                        <select name="f_user_role" class="form-control" id="f_user_role" required>
+                            <option value="Admin">Admin</option>
+                            <option value="Submitter">Submitter</option>
+                            <option value="Developer">Developer</option>
+                            <option value="Project Manager">Project Manager</option>
+                        </select>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group my-3 col text-center">
+                    <button class="btn btn-primary d-inline-block" type="submit" disabled="true" id="btn-register">Register</button>
+                </div>
+            </div>
+            
+        </form>
+        <p class="mt-4">
+            <small>
+                Want to try out Bug Tracker?
+                <br>
+                Sign in with a <a href="#" data-confirm="Sign in with the following accounts to demo Bug Tracker:"><u>demo account.</u></a>
+            </small>
+        </p>
+    </div>
+
+    </div>
+</div>
+
+<script src="/static/js/register-credentials-validate.js"></script>
+<script src="/static/js/demouser-modal.js"></script>
+{% endblock %}

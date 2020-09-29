@@ -1,0 +1,191 @@
+nav .navbar-brand
+{
+    /* size for brand */
+    font-size: xx-large;
+}
+
+main .form-control
+{
+    /* center form controls */
+    display: inline-block;
+}
+
+main
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+main img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+
+html {
+  font-size: 1rem;
+}
+
+@include media-breakpoint-up(sm) {
+  html {
+    font-size: 1.2rem;
+  }
+}
+
+@include media-breakpoint-up(md) {
+  html {
+    font-size: 1.4rem;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  html {
+    font-size: 1.6rem;
+  }
+}
+
+.bg-texture-1 {
+  background-image: url("/static/img/arches.png");
+}
+
+.bg-texture-2 {
+  background-image: url("/static/img/arches.png");
+}
+
+.bg-texture-3 {
+  background-image: url("/static/img/asfalt-light.png");
+}
+
+.bg-texture-4 {
+  background-image: url("/static/img/black-linen.png");
+}
+
+.bg-white {
+  /* Override bg-white of bootstrap */
+  background-color: antiquewhite !important;
+}
+
+a.nav-link {
+  color: white !important;
+}
+
+a.nav-link:hover {
+  color: #2B3E50 !important;
+  font-weight: bold !important;
+}
+
+.table-wrapper-scroll-y {
+  position: relative;
+  height: 21rem;
+  overflow: auto;
+  display: block;
+}
+
+.border-darker {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+.fixed-table-container {
+  border-bottom: 0px !important;
+}
+
+.hidden-overflow select {
+  overflow: auto;
+}
+
+.fixed-table-border {
+  border-left: 0px !important;
+  border-right: 0px !important;
+}
+
+.border-radius-slanted {
+  border-radius: 350px 0px !important;
+}
+
+.border-radius-silo {
+  border-radius: 35px 35px 0px 0px !important;
+}
+
+/* Simulate Outline https://css-tricks.com/adding-stroke-to-web-text/ */
+.text-shadow-h1 {
+  text-shadow: 
+              1px 1px 3px black,
+              2px 2px 3px black,
+              0 0 0.3em black;
+              /* 
+              -1px -1px 0 black,  
+              1px -1px 0 black,
+              -1px 1px 0 black,
+              1px 1px 0 black;
+              */
+}
+
+.box-shadow {
+  box-shadow: 0.3em 0.3em 0.8em  #00000080;
+}
+
+.bg-gradient0 {
+  background: linear-gradient(0deg, #FFFFFF30, #00000000 85%);
+}
+
+.bg-gradient180 {
+  background: linear-gradient(180deg, #FFFFFF30, #00000000 85%);
+}
+
+.bg-darker {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.bg-critical {
+  background-color: rgba( 255, 0, 0, 0.5);
+}
+
+.chart-responsive {
+  width: 100%; 
+  min-height: 300px;
+  height: auto;
+}
+
+g path, g { cursor: pointer; }
+
+/* .project-card {
+  transform: scale(1.15) translateY(-15%);
+} */
+
+
+/* Media Queries to make CSS Card Queries Responsive */
+/* See: https://stackoverflow.com/a/43117538/14000441 */
+@media (min-width: 576px) {
+  .card-columns {
+      column-count: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-columns {
+      column-count: 2;
+  }
+}
+
+@media (min-width: 992px) {
+  .card-columns {
+      column-count: 3;
+  }
+}
+
+@media (min-width: 1200px) {
+  .card-columns {
+      column-count: 4;
+  }
+}
+
+.text-shadow-1 {
+  text-shadow: 1px 1px 0.1em black;
+}
+
+.text-shadow-2 {
+  text-shadow: 2px 2px 0.15em black;
+}

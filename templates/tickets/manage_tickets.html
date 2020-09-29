@@ -1,0 +1,138 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manage Tickets
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/font-awesome-all.min.js"></script>
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container">
+    <div class="row my-3 bg-darker border border-darker p-3">
+
+        <div class="mr-auto">
+            <img class="d-inline-flex img-fluid mr-2" src="/static/svg/projects-illustration.svg" alt="Projects List">
+            <h1 class="d-inline-flex align-middle m-0 text-white">Tickets</h1>
+        </div>
+
+        <div class="my-auto small">
+            <div class="my-auto d-inline-block mr-2">
+                <a href="/tickets" class="text-white btn btn-info px-3"><i class="fa fa-redo" aria-hidden="true"></i></a>
+            </div>
+            <div class="my-auto d-inline-block">
+                <a href="/tickets/new" class="text-white btn btn-success px-3"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Add New Ticket</a>
+            </div>
+        </div>
+    </div>
+
+    {% set critical_tickets = ticketslist | selectattr('tck_prio', 'equalto', 'Critical') | list | count %}
+    {% if critical_tickets > 0 %}
+    <div class="no-gutter row border border-danger text-left mb-3">
+        <div class="col py-3">
+            <h6 class="text-center">Critical Tickets</h6 class="text-center">
+            <table class="table table-hover border border-darker mb-0">
+                <thead>
+                    <tr class="bg-critical small">
+                        <th class="border border-darker py-2 w-100">Ticket</th>
+                        <th class="border border-darker py-2 text-center">Type</th>
+                        <th class="border border-darker py-2 text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="small py-1">
+                    {% for t in ticketslist | sort(attribute='tck_created') if t.tck_prio == 'Critical' and t.tck_status != 'Resolved' %}
+                    <tr>
+                        <td class="border border-darker py-1">
+                            <a href="/manage_ticket/{{ t.tck_id }}">
+                                {{ t.tck_title }}
+                            </a>
+                        </td>
+                        <td class="border border-darker py-1 text-nowrap text-center">
+                                {{ t.tck_type }}
+                        </td>
+                        <td class="border border-darker py-1 text-nowrap text-center">
+                                {{ t.tck_status }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row border border-darker p-2 text-center bg-darker">
+
+        <div class="col pb-3">
+
+            <table id="user-list" class="table table-hover border border-darker overflow-hidden" data-toggle="table" data-mobile-responsive="true" data-search="true" data-show-search-button="true" data-search-on-enter-key="true" data-show-search-clear-button="true">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="border border-darker bg-texture-1 lead">
+                            Ticket
+                        </th>
+                        <th class="border border-darker bg-texture-1 lead">
+                            Details
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in ticketslist %}
+                    <tr class="py-5">
+                        <td class="align-top py-4 w-75">
+                            <div class="m-0 p-0">
+                                <div class="bg-darker w-100 p-2 d-flex flex-wrap align-items-center mr-1 mt-0 text-left text-md-center border border-darker text-shadow-2">
+                                    <a href="/manage_project/{{ ticket.tck_proj_id }}" class="badge badge-primary my-auto text-decoration-none d-block">{{ ticket.project.proj_name }}</a>
+                                {# </div>
+                                <div class="col {{ 'bg-critical' if ticket.tck_prio == 'Critical' else 'bg-darker' }} py-1"> #}
+                                    <a href="/manage_ticket/{{ ticket.tck_id }}" class="text-decoration-none lead px-2 flex-md-grow-1 d-block">{{ ticket.tck_title }}</a>
+                                </div>
+                            </div>
+                            <div class="text-left px-2 mt-1 mb-2">
+                                {{ ticket.tck_desc }}
+                            </div>
+                        </td>
+                        <td class="align-top py-4">
+                            <div class="p-0 m-0 row">
+                                <div class="text-nowrap w-100 mb-1 bg-darker border {{ 'bg-critical border-darker' if ticket.tck_type == 'Bug Report' else 'border-warning text-body' if ticket.tck_type == 'Feature Request' else 'border-darker' }}">
+                                    <div class="px-2 py-1">
+                                        {{ ticket['tck_type'] }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-0 m-0 row">
+                                <div class="badge text-nowrap small border border-darker mb-1 py-1 col {{ 'badge-danger bg-critical' if ticket.tck_prio == 'Critical' else 'badge-dark bg-darker' }}">
+                                    {{ ticket['tck_prio'] }}
+                                </div>
+                                <div class="badge text-nowrap small border border-darker mb-1 py-1 col {{ 'badge-danger bg-critical' if ticket.tck_status == 'Unresolved' else 'badge-success' if ticket.tck_status == 'Resolved' else 'badge-dark bg-darker' }}">
+                                    {{ ticket['tck_status'] }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col small text-center text-nowrap">
+                                    {{ ticket['developer']['user_first_name'] + ' ' + ticket['developer']['user_last_name'] }}
+                                </div>
+                            </div>
+                            <div class="p-0 m-0 row">
+                                <div class="col small text-muted text-center text-nowrap">
+                                    Filed: {{ ticket['tck_created'].strftime("%b %d, %Y") }}
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,619 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Overview
+{% endblock %}
+
+{% block head %}
+<!-- Bootstrap-Table -->
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<!-- Font Awesome -->
+<script src="/static/js/font-awesome-all.min.js"></script>
+
+<!-- BenchNine Font -->
+<link href="https://fonts.googleapis.com/css2?family=BenchNine:wght@300&display=swap" rel="stylesheet">
+
+<!-- Start of Google Charts API -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+{# ################### #}
+{# CHARTS MEGA SECTION #}
+{# ################### #}
+
+{# 
+Color List:
+#5cb85c
+#5bc0de
+#f0ad4e
+#d9534f
+#333333
+#DDDDDD
+#bd5916
+#4e5d6c
+#}
+
+{# #################################### #}
+{# ### Project+Ticket COLUMN Chart  ### #}
+{# #################################### #}
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawProjectsStackedColumns);
+
+    function drawProjectsStackedColumns() {
+        
+        var data_projects = new google.visualization.DataTable();
+            data_projects.addColumn('string', 'Project');
+            // Tickets By Type
+            // You have to style each column: https://stackoverflow.com/questions/29393430/google-chart-stacked-column-chart-how-to-style-each-individual-stacked-item-da
+            data_projects.addColumn('number', 'Bug Reports');
+            data_projects.addColumn({type: 'string', role: 'style'});
+            data_projects.addColumn({type: 'string', role: 'link'});
+            data_projects.addColumn('number', 'Feature Requests');
+            data_projects.addColumn({type: 'string', role: 'style'});
+            data_projects.addColumn({type: 'string', role: 'link'});
+            data_projects.addColumn('number', 'Other Comments');
+            data_projects.addColumn({type: 'string', role: 'style'});
+            data_projects.addColumn({type: 'string', role: 'link'});
+            data_projects.addColumn('number', 'Documentation Requests');
+            data_projects.addColumn({type: 'string', role: 'style'});
+            data_projects.addColumn({type: 'string', role: 'link'});
+            
+            data_projects.addRows([
+                // ['Unresolved', 4, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report'],
+                // ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Feature Request'],
+                // ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/priority/Critical'],
+                // ['More Details Required', 1, 'color: #5bc0de; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/status/New']
+                {% for p in projectslist %}
+                    [
+                        '{{ p.proj_name }}',
+                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
+                        'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
+                        '/tickets/search/{{ p.proj_id }}/type/Bug Report',
+                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Feature Request')|list|count }}, 
+                        'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
+                        '/tickets/search/{{ p.proj_id }}/type/Feature Request',
+                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Other Comments')|list|count }}, 
+                        'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
+                        '/tickets/search/{{ p.proj_id }}/type/Other Comments',
+                        {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Documentation Request')|list|count }},
+                        'stroke-color: #FFFFFF; stroke-width: 2; stroke-opacity: 1;',
+                        '/tickets/search/{{ p.proj_id }}/type/Documentation Request'
+                    ],
+                {% endfor %}
+            ]);
+        /*
+        var data_projects = google.visualization.arrayToDataTable([
+            ['Status', 'Count', { role: 'style' }, { role: 'annotation' } ],
+            ['Unresolved', 2, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Cu' ],
+            ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Ag' ],
+            ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Au' ],
+            ['More Details Required', 1, 'color: #333333; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Pt' ]
+        ]);
+        */
+
+          var options = {
+                    'backgroundColor':'none',
+                    colors: ['#d23430', '#f0ad4e', '#5cb85c', '#5bc0de', '#4e5d6c'],
+                    isStacked: true,
+                    height: 500,
+                    legend: {
+                        position: 'top',
+                        alignment: 'center',
+                        maxLines: 2,
+                        textStyle: {
+                            'color':'white',
+                            'fontName': 'BenchNine',
+                            'maxLines': 2,
+                            'fontSize': 18
+                        },
+                    },
+                    hAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textStyle: {
+                            'color':'white',
+                            'fontName': 'BenchNine',
+                            'fontSize': 18
+                        },
+                        textPosition: 'out',
+                        maxAlternation: 4,
+                        maxTextLines: 3,
+                        slantedText: true,
+                        slantedTextAngle: 90
+                    },
+                    vAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textPosition: 'none'
+                    },
+                    chartArea: {
+                        top: '20%',
+                        left: 'auto',
+                        width:'85%',
+                        height:'55%'
+                    }
+            };
+
+            var project_chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+            
+            // Adding Links to data: https://stackoverflow.com/questions/6205621/how-to-add-links-in-google-chart-api
+            google.visualization.events.addListener(project_chart, 'select', function (e) {
+                var selection = project_chart.getSelection();
+                    if (selection.length) {
+                        var row = selection[0].row;
+                        // FYI the column style column is one index away from data
+                        // then link column is two indexes away from the data
+                        let link = data_projects.getValue(row, selection[0].column + 2);
+                        location.href = link;
+                    }
+                });
+
+            project_chart.draw(data_projects, options);
+        }
+</script>
+
+{# ################################### #}
+{# ### Project+Ticket DONUT Chart  ### #}
+{# ################################### #}
+<script type="text/javascript">
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawProjectBugReportsPie);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawProjectBugReportsPie() {
+
+        // Create the data_projects_bugreports table.
+        var data_projects_bugreports = new google.visualization.DataTable();
+        data_projects_bugreports.addColumn('string', 'Project');
+        data_projects_bugreports.addColumn('number', 'Bug Reports');
+        data_projects_bugreports.addColumn({type: 'string', role: 'link'});
+        data_projects_bugreports.addColumn({type: 'string', role: 'style'});
+
+        data_projects_bugreports.addRows([
+            {% for p in projectslist %}
+            [
+                '{{ p.proj_name }}',
+                {{ p.proj_tickets | selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
+                '/tickets/search/{{ p.proj_id }}/type/Bug Report',
+                'cursor: pointer; stroke-color: #FFFFFF; stroke-width: 2;'
+            ],
+            {% endfor %}
+        ]);
+
+        // Set chart options
+        var options = {'backgroundColor':'none',
+                        colors: ['#d23430', '#f0ad4e', '#5cb85c', '#5bc0de', '#4e5d6c'],
+                        pieHole: 0.5,
+                        height: 500,
+                        pieSliceText: 'value',
+                        tooltip: {
+                            ignoreBounds: false
+                        },
+                        pieSliceTextStyle: {
+                            'color':'white',
+                            'fontName': 'BenchNine',
+                            'fontSize': 25
+                        },
+                        legend: {
+                            textStyle: {
+                                'color':'white',
+                                'fontName': 'BenchNine',
+                                'fontSize': 18
+                            },
+                            alignment: 'center',
+                            position: 'top',
+                            maxLines: 3
+                        },
+                        chartArea: {
+                            top: 'auto',
+                            width:'85%',
+                            height:'60%'
+                        }
+                    };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart_project_bugreports = new google.visualization.PieChart(document.getElementById('chart_div2'));
+        google.visualization.events.addListener(chart_project_bugreports, 'select', function (e) {
+                    var selection = chart_project_bugreports.getSelection();
+                        if (selection.length) {
+                            var row = selection[0].row;
+                            let link = data_projects_bugreports.getValue(row, 2);
+                            location.href = link;
+                        }
+                    });
+
+        chart_project_bugreports.draw(data_projects_bugreports, options);
+    }
+</script>
+
+{# #################################### #}
+{# ### Google Chart COLUMN Template ### #}
+{# #################################### #}
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+    
+        var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Status');
+            data.addColumn('number', 'Slices');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'link'});
+            data.addColumn('number', 'Slices 2');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'link'});
+            
+            data.addRows([
+                ['Unresolved', 4, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Critical'],
+                ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 1, 'color: #5bc0de; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Critical'],
+                ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 5, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/priority/Critical'],
+                ['More Details Required', 1, 'color: #5bc0de; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 3, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/status/Critical']
+            ]);
+        /*
+        var data = google.visualization.arrayToDataTable([
+            ['Status', 'Count', { role: 'style' }, { role: 'annotation' } ],
+            ['Unresolved', 2, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Cu' ],
+            ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Ag' ],
+            ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Au' ],
+            ['More Details Required', 1, 'color: #333333; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Pt' ]
+        ]);
+        */
+
+          var options = {
+                    'backgroundColor':'none',
+                    colors: ['#4e5d6c','#5cb85c', '#5bc0de', '#f0ad4e', '#d9534f', '#333333', '#DDDDDD', '#bd5916'],
+                    bar: {
+                        groupWidth: "90%"
+                    },
+                    legend: {
+                        position: 'none',
+                        alignment: 'center'
+                    },
+                    hAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textStyle: {
+                        'color':'white',
+                        'fontName': 'Lato',
+                        'fontSize': 12
+                        },
+                        textPosition: 'in',
+                        maxAlternation: 4,
+                        maxTextLines: 3
+                    },
+                    vAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textPosition: 'none'
+                    },
+                    bar: {
+                        groupWidth: "80%"
+                    },
+                    chartArea: {
+                        width:'85%',
+                        height:'85%'
+                    }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+            
+            // Adding Links to data: https://stackoverflow.com/questions/6205621/how-to-add-links-in-google-chart-api
+            google.visualization.events.addListener(chart, 'select', function (e) {
+                var selection = chart.getSelection();
+                    console.log(selection)
+                    console.log(selection[0].column)
+                    // selection.length is 1, and 1 is True. Cool.
+                    if (selection.length) {
+                        var row = selection[0].row;
+                        console.log(row);
+                        let link_col = (selection[0].column) + 2;
+                        console.log(link_col);
+                        let link = data.getValue(row, selection[0].column + 2);
+                        //location.href = link;
+                        console.log(link);
+                    }
+                });
+
+            chart.draw(data, options);
+        }
+</script>
+
+
+{# ######################### #}
+{# Google Chart DONUT Template #}
+{# ######################### #}
+<script type="text/javascript">
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addColumn({type: 'string', role: 'link'});
+        data.addColumn({type: 'string', role: 'style'});
+
+        data.addRows([
+            ['Projects', 7, '/projects', 'cursor: pointer;'],
+            ['Tickets', 3, '/projects', 'cursor: pointer;'],
+            ['Bug Reports', 18, '/projects', 'cursor: pointer;'],
+            ['Feature Requests', 3, '/projects', 'cursor: pointer;']
+        ]);
+
+        // Set chart options
+        var options = {'backgroundColor':'none',
+                        colors: ['#5cb85c', '#5bc0de', '#f0ad4e', '#d9534f', '#333333', '#DDDDDD', '#bd5916', '#4e5d6c'],
+                        pieHole: 0.5,
+                        pieSliceText: 'value',
+                        tooltip: {
+                            ignoreBounds: false
+                        },
+                        pieSliceTextStyle: {
+                            'color':'white',
+                            'fontName': 'Lato',
+                            'fontSize': 16
+                        },
+                        legend: {
+                            textStyle: {
+                                'color':'white',
+                                'fontName': 'Lato',
+                                'fontSize': 12
+                            },
+                            alignment: 'center',
+                            position: 'right',
+                        },
+                        chartArea: {
+                            width:'85%',
+                            height:'85%'
+                        }
+                    };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartpie = new google.visualization.PieChart(document.getElementById('chart_div4'));
+        google.visualization.events.addListener(chartpie, 'select', function (e) {
+                    var selection = chartpie.getSelection();
+                        if (selection.length) {
+                            var row = selection[0].row;
+                            let link = data.getValue(row, 2);
+                            location.href = link;
+                        }
+                    });
+        // google.visualization.events.addListener(chartpie, 'onmouseover', mouseHandlerPointer1);                 
+        // google.visualization.events.addListener(chartpie, 'onmouseout', mouseHandlerDefault1);
+
+        chartpie.draw(data, options);
+    }
+</script>
+
+{# ########################################################################## #}
+{# Chart Responsive for Google Chart: https://codepen.io/flopreynat/pen/BfLkA #}
+{# ########################################################################## #}
+<script type="text/javascript">
+    $(window).resize(function(){
+        drawChart();
+        drawBasic();
+        drawProjectsStackedColumns();
+        drawProjectBugReportsPie();
+    });
+</script>
+
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    $('.slim-scroll').slimScroll({
+        height: "350px",
+    });
+});
+</script>
+
+{% endblock %}
+
+{% block main %}
+
+{# USER GUIDE: Modal Window #}
+<div class="modal fade" tabindex="-1" role="dialog" id="user-guide-modal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">User Guide</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed ullamcorper morbi tincidunt ornare massa eget egestas purus. Sapien eget mi proin sed libero enim sed. Gravida rutrum quisque non tellus orci ac auctor augue. Neque aliquam vestibulum morbi blandit cursus risus at ultrices mi. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Lectus sit amet est placerat in.
+        </p>
+        <p>
+            Urna id volutpat lacus laoreet non curabitur gravida arcu. Habitasse platea dictumst quisque sagittis. Magna sit amet purus gravida quis blandit turpis cursus. Porttitor rhoncus dolor purus non enim praesent elementum. Vel facilisis volutpat est velit. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus. Accumsan lacus vel facilisis volutpat est velit egestas dui. Pulvinar sapien et ligula ullamcorper malesuada. Tortor consequat id porta nibh venenatis.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Header Container #}
+<div class="container">
+    <!-- Page Header -->
+    <div class="row my-3 p-3 border border-darker bg-darker">
+
+        <div class="my-auto mr-2">
+            <img class="d-inline-flex img-fluid mr-3" src="/static/svg/projects-illustration.svg" alt="Overview">
+            <h1 class="d-inline-flex align-middle m-0">Overview</h1>
+        </div>
+
+        <div class="mr-auto my-auto d-inline-block px-2">
+            <div class="mt-1">
+                <a href="#" class="badge badge-info py-1 px-3" data-toggle="modal" data-target="#user-guide-modal">
+                    <span class="m-0 text-right">
+                        User Guide
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="my-auto d-inline-block px-3">
+            <p class="lead m-0 text-right">
+                {{ user_first_name + " " + user_last_name }}
+                <br>
+                <span class="small text-muted font-weight-light">{{ user_role }}</span>
+            </p>
+        </div>
+        
+    </div>
+</div>
+
+{# Charts Container #}
+<div class="container bg-darker border border-darker mx-0 mb-3">
+    <div class="row">
+        <div class="col-lg-6 m-0 p-3 w-100 h-100">
+            <div class="h1 my-3">Project Tickets</div>
+            <div id="chart_div1" class="chart-responsive h-auto"></div>
+        </div>
+
+        <div class="col-lg-6 m-0 p-3 w-100">
+            <div class="h1 my-3">Bug Reports</div>
+            <div id="chart_div2" class="chart-responsive"></div>
+        </div>
+
+    </div>
+</div>
+
+{# Tickets List #}
+<div class="container mb-3 border border-darker p-3 text-center bg-darker">
+
+    <div class="row no-gutters">
+        <div class="col-lg border border-danger text-left m-3">
+            <div class="p-3">
+                <h3 class="text-center">Critical Tickets</h3>
+
+                <div class="slim-scroll border-bottom border-darker">
+                    <table class="table table-hover border border-darker mb-0">
+                        <thead>
+                            <tr class="bg-critical small">
+                                <th class="border border-darker py-2 w-100">Ticket</th>
+                                <th class="border border-darker py-2 text-center">Type</th>
+                                <th class="border border-darker py-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for t in ticketslist | sort(attribute='tck_created') if t.tck_prio == 'Critical' and t.tck_status != 'Resolved' %}
+                            <tr>
+                                <td class="border border-darker py-1">
+                                    <a href="/manage_ticket/{{ t.tck_id }}" class="">
+                                        {{ t.tck_title }}
+                                    </a>
+                                </td>
+                                <td class="border border-darker py-1 text-center align-middle">
+                                        {{ t.tck_type }}
+                                </td>
+                                <td class="border border-darker py-1 text-center align-middle">
+                                        {{ t.tck_status }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-lg border border-success text-left m-3">
+            <div class="p-3">
+                <h3 class="text-center">Resolved Tickets</h3>
+                
+                <div class="slim-scroll border-bottom border-darker">
+                    <table class="table table-hover border border-darker mb-0">
+                        <thead>
+                            <tr class="bg-success small">
+                                <th class="border border-darker py-2 w-100">Ticket</th>
+                                <th class="border border-darker py-2 text-center">Type</th>
+                                <th class="border border-darker py-2 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                            {% for t in ticketslist | sort(attribute='tck_created') if t.tck_status == 'Resolved' %}
+                            <tr>
+                                <td class="border border-darker py-1 align-middle">
+                                    <a href="/manage_ticket/{{ t.tck_id }}">
+                                        {{ t.tck_title }}
+                                    </a>
+                                </td>
+                                <td class="border border-darker py-1 text-center align-middle">
+                                        {{ t.tck_type }}
+                                </td>
+                                <td class="border border-darker py-1 text-center align-middle">
+                                        {{ t.tck_status }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+{# Debugging Helper #}
+<div class="container d-none">
+
+    <div class="row">
+        <div class="col-md-6 m-0 p-3 w-100">
+            <div class="h1 my-3">Placeholder Chart</div>
+            <div id="chart_div3" class="chart-responsive"></div>
+        </div>
+        <div class="col-md-6 m-0 p-3 w-100">
+            <div class="h1 my-3">Placeholder Chart</div>
+            <div id="chart_div4" class="chart-responsive"></div>
+        </div>
+    </div>
+
+    <br><br><br>
+    {{ projectslist }}
+    <br><br>
+    {{ ticketslist }}
+
+</div>
+
+
+{% endblock %}

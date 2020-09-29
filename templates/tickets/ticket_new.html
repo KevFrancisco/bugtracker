@@ -1,0 +1,115 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Ticket
+{% endblock %}
+
+{% block head %}
+<script src="/static/js/bootstrap-validate.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md my-auto mx-3 bg-secondary p-5 border-radius-slanted">
+            <div class="my-auto">
+                <img src="/static/svg/ticket-new-illustration.svg">
+            </div>
+        </div>
+        <div class="col-md-6 my-auto mx-3">
+            <div class="mb-3 mt-3">
+                <h3 class="mb-0">Create New Ticket<img class="mb-1 ml-2" src="/static/svg/register-icon.svg" height="28" width="28"></h3>
+            </div>
+            <form id="createticketform" action="/tickets/new" method="post" class="form-signin text-left needs-validation mt-3">
+                
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_proj_id" class="mb-1">Project</label>
+                            <select id="f_tck_proj_id" name="f_tck_proj_id" class="form-control bv-req" required>
+                                {% for p in projectslist %}
+                                    <option value="{{ p['proj_id'] }}">{{ p['proj_name'] }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="form-group col my-1">
+                        <label for="f_tck_title" class="mb-1">Ticket Title</label>
+                        <input id="f_tck_title" autocomplete="off" autofocus class="form-control bv-req bv-min5 bv-max50 bv-min5 bv-alphaspacenum" name="f_tck_title" placeholder="Ticket Title" type="text" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col my-1">
+                        <label for="f_tck_desc" class="mb-1">Ticket Description</label>
+                        <textarea id="f_tck_desc" class="form-control bv-alphaspacenumarea bv-req bv-min5 bv-max555" name="f_tck_desc" placeholder="Ticket Description" type="text" rows="5" required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_type" class="mb-1">Type</label>
+                            <select id="f_tck_type" name="f_tck_type" class="form-control bv-req" required>
+                                <option value="Bug Report" selected="selected">Bug Report</option>
+                                <option value="Feature Request">Feature Request</option>
+                                <option value="Other Comments">Other Comments</option>
+                                <option value="Documentation Request">Documentation Request</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_prio" class="mb-1">Priority</label>
+                            <select id="f_tck_prio" name="f_tck_prio" class="form-control bv-req" required>
+                                <option value="Critical" class="text-danger">Critical</option>
+                                <option value="High" selected="selected">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_status" class="mb-1">Status</label>
+                            <select id="f_tck_status" name="f_tck_status" class="form-control bv-req" required>
+                                <option value="New" selected="selected">New</option>
+                                <option value="Open">Open</option>
+                                <option value="Unresolved">Unresolved</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved" class="text-success">Resolved</option>
+                                <option value="More Details Required" class="text-warning">More Details Required</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_submitter" class="mb-1">Submitter</label>
+                            <select id="f_tck_submitter" name="f_tck_submitter" class="form-control bv-req" required>
+                                {% for su in subuserlist %}
+                                    <option value="{{ su['user_id']}}" {{ "selected='selected'" if thisuserid == su['user_id'] else '' }}>{{ su['user_first_name'] + ' ' + su['user_last_name'] }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_developer" class="mb-1">Developer</label>
+                            <select id="f_tck_developer" name="f_tck_developer" class="form-control bv-req" required>
+                                {% for du in devuserlist %}
+                                    <option value="{{ du['user_id']}}" {{ "selected='selected'" if thisuserid == du['user_id'] else '' }}>{{ du['user_first_name'] + ' ' + du['user_last_name'] }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group my-3 col text-center">
+                        <button id="bv-submit" class="btn btn-primary d-inline-block" disabled="true" type="submit">File Ticket</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+<script src="/static/js/ticket-new-validate.js"></script>
+
+{% endblock %}

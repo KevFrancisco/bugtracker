@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/bootstrap-validate.js"></script>
+
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('.fixed-table-body').slimScroll({
+        height: "304px"
+    });
+});
+</script>
+{% endblock %}
+
+{% block title %}
+    Manage Project
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+
+    <div class="row my-3">
+        <div class="mx-auto">
+            <img class="d-inline-flex img-fluid mr-3" src="/static/svg/manage_project.svg" alt="User">
+            <h1 class="d-inline-flex align-middle m-0">Manage Project</h1>
+        </div>
+    </div>
+
+<div class="row">
+
+    <div class="col-lg order-lg-2 my-3">
+        <form action="/manage_project/{{ project['proj_id'] }}" method="POST" enctype=multipart/form-data class="text-left needs-validation" novalidate>
+
+            <hr>
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_proj_name" class="mb-1">Project Name</label>
+                    <input id="f_proj_name" autocomplete="off" autofocus class="form-control" name="f_proj_name" placeholder="Project Name" type="text" value="{{ project['proj_name'] }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col">
+                    <div class="card bg-darker mx-3 my-2 px-3 py-2 m-0">
+                        <label class="my-1">Project Image<span class="small text-muted text-right"> - Limited to .png and 2MB file size.</span>
+                        <div id="input_wrapper" class="col custom-file">
+                            <input id="f_proj_img" type="file" name="f_proj_img" class="custom-file-input">
+                            <label for="f_proj_img" class="custom-file-label">Project Image</label>
+                        </div>
+                        {# Script to change the show the user the filename selected #}
+                        <script type="text/javascript">
+                        // From Stack Overflow https://www.codeply.com/p/LtpNZllird
+                        document.querySelector('.custom-file-input').addEventListener('change',function(e){
+                            var fileName = document.getElementById("f_proj_img").files[0].name;
+                            var nextSibling = e.target.nextElementSibling
+                            nextSibling.innerText = fileName
+                        })
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col w-100 my-1">
+                    <label for="f_proj_user_id" class="mb-1">Manager</label>
+                        <select id="f_proj_user_id" name="f_proj_user_id" class="form-control" required>
+                            {% for u in userlist %}
+                                <option value="{{ u['user_id'] }}" {{ "selected='selected'" if u['user_id'] == project['proj_user_id'] else '' }}>{{ u['user_first_name'] + ' ' + u['user_last_name'] }}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+
+                <div class="form-group col my-1">
+                    <label for="f_proj_deadline" class="mb-1">Due Date</label>
+                    <input id="f_proj_deadline" class="form-control" name="f_proj_deadline" placeholder="Due Date" type="date" value="{{ project['proj_deadline'].strftime('%Y-%m-%d') }}" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col my-1">
+                    <label for="f_proj_desc" class="mb-1">Project Description</label>
+                    <textarea id="f_proj_desc" class="form-control" name="f_proj_desc" placeholder="Project Description" type="text" rows="3" required>{{ project['proj_desc'] }}</textarea>
+                </div>
+            </div>
+
+            <hr>
+
+
+            <div class="d-flex"> 
+                <button type="submit" data-confirm="Are you sure you want to delete the Project: {{ project['proj_name'] }}?" formaction="/manage_project/delete/{{ project['proj_id'] }}" method="POST" class="btn btn-danger d-inline-block mr-auto">Delete</button>
+                <script src="/static/js/project-delete-confirm.js"></script>
+                <button type="reset" class="btn btn-danger d-inline-block ml-auto">Cancel</button>
+                <button id="btn-save" type="submit" class="btn btn-success d-inline-block ml-2">Save</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="col-lg-4 order-lg-1 my-3">
+        <div  class="border border-primary my-3 p-2">
+            <div class="border-bottom border-darker">
+                <table id="users-list" class="table table-hover border border-darker" data-toggle="table" data-height="350">
+                    <thead class="border border-primary">
+                        <tr class="table-primary" class="border border-darker">
+                            {# Bootstrap CANNOT SORT the first column, maybe it's the index for data-sorting #}
+                            {# The current workaround is to hide the firstcolumn instead #}
+                            <th class="d-none">ID</th>
+                            <th class="border border-darker" data-sortable="true">Project Name</td>
+                            <th class="border border-darker">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody class="border border-darker">
+                        {% for proj in projectlist %}
+                        <tr>
+                            <td>{{ proj.proj_id }}</td>
+                            <td>{{ proj["proj_name"] }}</td>
+                            <td class=>
+                                <a href="/manage_project/{{ proj['proj_id'] }}" class="small badge badge-primary">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+</div>
+<!-- Validator must reside at the end of the page -->
+<script src="/static/js/project-change-validate.js"></script>
+
+{% endblock %}

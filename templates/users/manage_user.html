@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/bootstrap-validate.js"></script>
+
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+<script src="/static/js/attach-slim-scroll.js"></script>
+{% endblock %}
+
+{% block title %}
+    Manage User
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+
+    <div class="row my-3">
+        <div class="mx-auto">
+            <img class="d-inline-flex img-fluid mr-3" src="/static/svg/manage_user.svg" alt="User">
+            <h1 class="d-inline-flex align-middle m-0">Manage User</h1>
+        </div>
+    </div>
+
+<div class="row">
+
+    <div class="col-lg order-lg-2 mb-3">
+        <!-- TODO Add Change Password as an option -->
+        <form action="/manage_user/{{ user['user_id'] }}" method="POST"  class="text-left needs-validation" novalidate>
+            <hr>
+            <div class="row my-3">
+                <div class="col m-0 p-0 d-inline-flex row">
+                    <div class="input-group m-0 p-0 col-8">
+                        <div>
+                            <div class="input-group-prepend">
+                                <span class="input-group-text small" id="">First and Last Name</span>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control bv-alphaspace bv-max50 bv-min5 bv-req" id="f_user_first_name" name="f_user_first_name" value="{{ user['user_first_name'] if user['user_first_name'] else '' }}" placeholder="First Name" required>
+                    </div>
+                    <div class="form-group m-0 p-0 col">
+                        <input type="text" class="form-control bv-alphaspace bv-max50 bv-min5 bv-req" id="f_user_last_name" name="f_user_last_name" value="{{ user['user_last_name'] if user['user_last_name'] else '' }}" placeholder="Last Name" required>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="row my-3 ">
+                <div class="col-md">
+                    <div class="form-group mb-0">
+                        <label for="f_user_name">Username</label>
+                        <input type="text" id="f_user_name" class="form-control mb-2 bv-alphanum bv-max30 bv-min5 bv-req" name="f_user_name" value="{{ user['user_name'] }}" placeholder="Username" required>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="f_user_email">Email</label>
+                        <input type="text" id="f_user_email" class="form-control mb-3 bv-email bv-req" name="f_user_email" value="{{ user['user_email'] if user['user_email'] else '' }}" placeholder="Email" required>
+                    </div>
+                </div>
+                <div class="col-md-5">
+
+                    <div class="form-group">
+                        <label for="f_user_role">Role</label>
+                        <div class="hidden-overflow">
+                            <select name="f_user_role" class="form-control" id="f_user_role" size="5" required>
+                                <option value="Admin" {{ "selected='selected'" if user['user_role'] == 'Admin' else '' }}>Admin</option>
+                                <option value="Submitter" {{ "selected='selected'" if user['user_role'] == 'Submitter' else '' }}>Submitter</option>
+                                <option value="Developer" {{ "selected='selected'" if user['user_role'] == 'Developer' else '' }}>Developer</option>
+                                <option value="Project Manager" {{ "selected='selected'" if user['user_role'] == 'Project Manager' else '' }}>Project Manager</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <hr>
+
+
+            <div class="d-flex"> 
+                <button type="submit" data-confirm="Are you sure you want to delete the user: {{ user['user_first_name'] + ' ' + user['user_last_name'] if user['user_first_name'] and user['user_last_name'] else user['user_name'] }}?" formaction="/manage_user/delete/{{ user['user_id'] }}" method="POST" class="btn btn-danger d-inline-block mr-auto">Delete</button>
+                <script src="/static/js/user-delete-confirm.js"></script>
+                <button type="reset" class="btn btn-danger d-inline-block ml-auto">Cancel</button>
+                <button disabled="true" id="bv-submit" type="submit" class="btn btn-success d-inline-block ml-2">Save</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="col-lg-5 order-lg-1">
+        <!-- <div class="table-wrapper-scroll-y border border-primary my-3 p-2"> -->
+        <div  class="border border-primary my-3 p-2">
+            <div class="border-bottom border-darker">
+                <!--
+                    <table id="users-list" class="table table-hover border border-darker" data-toggle="table" data-height="300">
+                    -->
+                <table id="users-list" class="table table-hover border border-darker" data-toggle="table" data-height="300">
+                    <thead class="border border-primary">
+                        <tr class="table-primary border border-darker">
+                            <th class="border border-darker">ID</td>
+                            <th data-sortable="true" class="border border-darker">Name</td>
+                            <th class="border border-darker">Action</td>
+                        </tr>
+                    </thead>
+                    <tbody class="border border-darker">
+                        {% for u in userlist %}
+                        <tr>
+                            <td>{{ u["user_id"] }}</td>
+                            <td>
+                                {{ u["user_first_name"] + " " + u["user_last_name"] if u["user_first_name"] and u["user_last_name"] else u["user_name"] }}
+                            </td>
+                            <td class=>
+                                <a href="/manage_user/{{ u['user_id'] }}" class="small badge badge-primary">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+</div>
+<!-- Validator must reside at the end of the page -->
+<script src="/static/js/user-change-validate.js"></script>
+{% endblock %}

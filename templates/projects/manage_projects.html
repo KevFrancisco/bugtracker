@@ -1,0 +1,154 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manage Projects
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/font-awesome-all.min.js"></script>
+{% endblock %}
+
+{% block main %}
+
+
+<div class="container">
+    <div class="row my-3 bg-darker border border-darker p-3">
+
+        <div class="mr-auto">
+            <img class="d-inline-flex img-fluid mr-2" src="/static/svg/projects-illustration.svg" alt="Projects List">
+            <h1 class="d-inline-flex align-middle m-0 text-white">Projects</h1>
+        </div>
+
+        <div class="my-auto">
+            <div class="my-auto d-inline-block mr-2">
+                <a href="/projects" class="text-white small btn btn-info"><i class="fa fa-redo" aria-hidden="true"></i></a>
+            </div>
+            <div class="my-auto d-inline-block">
+                <a href="/projects/new" class="text-white btn btn-success"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Add New Project</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="border border-darker p-2 text-center bg-darker">
+    <div class="card-columns p-3 mb-3">
+        {% for p in projectslist %}
+        <div class="card-counter bg-none mb-4 mx-2">
+            <a href="manage_project/{{ p.proj_id }}" class="text-decoration-none text-white">
+                <div class="card box-shadow bg-primary bg-texture-3">
+                    <div class="card-header bg-primary bg-texture-3 border-0 p-3">
+                        <img class="card-img-top p-3" src="/uploads/img/project-cards/{{ p.proj_id }}.png" onerror="this.src='/static/img/project-cards/placeholder.png'" alt="{{ p.proj_name }}">
+                        <div class="">
+                            <h1 class="font-weight-light text-shadow-h1 mb-0">{{ p.proj_name }}</h1>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-3 border-0">
+                        <h4 class="card-title d-none">{{ p.proj_name}}</h4>
+                        <p class="card-text">{{ p.proj_desc }}</p>
+                    </div>
+
+                    <div class="card-footer p-3 border-0 bg-primary bg-texture-3">
+                        <p class="card-text small text-muted text-left d-flex flex-row justify-content-around">
+                            <span class="mx-1">Manager: <br>{{ p['manager']['user_first_name'] + ' ' + p['manager']['user_last_name'] }}</span>
+                            <span class="mx-1">Due Date: <br>{{ p['proj_deadline'].strftime("%b %d, %Y") }}</span>
+                        </p>
+                    </div>
+
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+    {# Old Table Display #}
+    {#
+    <div class="row border border-darker p-2 text-center bg-darker">
+
+        <div class="col pb-3">
+
+            <table id="user-list" class="table table-hover text-left" data-toggle="table" data-mobile-responsive="true" data-search="true" data-show-search-button="true" data-search-on-enter-key="true" data-show-search-clear-button="true">
+                <thead>
+                    <tr class="table-primary">
+                        <th class="border border-darker w-25 text-center">
+                            Project Name
+                        </th>
+                        <th class="border border-darker text-center">
+                            Description
+                        </th>
+                        <th class="border border-darker d-xs-none d-sm-none d-md-none d-lg-table-cell w-25 text-center" data-sortable="true">
+                            Details
+                        </th>
+                        <th class="border border-darker">
+                            Pics
+                        </th>
+                        <th class="border border-darker text-center">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projectslist %}
+                    <tr>
+                        <td>
+                            <div class="container-fluid border bg-darker p-3">
+                                <a href="/manage_project/{{ project['proj_id'] }}" class="lead text-decoration-none d-block w-100 py-2 px-3">
+                                    {{ project['proj_name'] }}
+                                </a>
+                            </div>
+                        </td>
+                        <td>{{ project['proj_desc'] }}</td>
+                        <td>
+                            {{ project['manager']['user_first_name'] + ' ' + project['manager']['user_last_name'] }}
+                            <br>
+                            {{ project['proj_deadline'].strftime("%b %d, %Y") }}
+                        </td>
+                        <td>
+                            {% set image = "/uploads/img/project-cards/" + project.proj_id | string + ".png"  %}
+                            {% if image %}
+                                <img src="/uploads/img/project-cards/{{ project.proj_id }}.png" alt="{{ project.proj_name }}" onerror="this.src='/static/img/project-cards/placeholder.png'">
+                            {% else %}
+                                <img src="/static/img/project-cards/placeholder.png">
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="/manage_project/{{ project['proj_id'] }}" class="badge badge-primary m-1 py-2 px-3">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    #}
+
+
+
+
+<div class="container d-none">
+    <ul class="text-left list-unstyled">
+        {% for project in projectslist %}
+        <li>
+            <ul>
+                <li>{{ project['proj_name'] }}</li>
+                <li>{{ project['proj_desc'] }}</li>
+                <li>{{ project['proj_deadline'] }}</li>
+                <li>{{ project['proj_user_id'] }}</li>
+                <li>{{ project['manager']['user_first_name'] + ' ' + project['manager']['user_last_name'] }}</li>
+            </ul>
+        </li>
+        <br>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
+{% endblock %}

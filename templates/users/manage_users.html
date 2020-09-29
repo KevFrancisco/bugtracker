@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Manage Users
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/font-awesome-all.min.js"></script>
+{% endblock %}
+
+
+{% block main %}
+<div class="container">
+
+<div class="row my-3 bg-darker border border-darker p-3">
+    <div class="mr-auto">
+        <img class="d-inline-flex img-fluid mr-2" src="/static/svg/projects-illustration.svg" alt="Projects List">
+        <h1 class="d-inline-flex align-middle m-0 text-white">Users</h1>
+    </div>
+</div>
+
+
+<div class="row border border-darker p-2 bg-darker">
+    
+    <div class="col pb-3">
+        <table id="user-list" class="table table-hover" data-toggle="table" data-mobile-responsive="true" data-search="true" data-show-search-button="true" data-search-on-enter-key="true" data-show-search-clear-button="true">
+            <thead>
+                <tr class="table-primary">
+                    <th class="py-0 bg-texture-1 lead bg-texture-1 lead border border-darker d-sm-none d-md-table-cell" data-sortable="true">Username</td>
+                    <th class="py-0 bg-texture-1 lead bg-texture-1 lead border border-darker d-sm-none d-md-table-cell" data-sortable="true">Email</td>
+                    <th class="py-0 bg-texture-1 lead bg-texture-1 lead border border-darker" data-sortable="true">Full Name</td>
+                    <th class="py-0 bg-texture-1 lead bg-texture-1 lead border border-darker" data-sortable="true">Role</td>
+                    <th class="py-0 bg-texture-1 lead bg-texture-1 lead border border-darker">Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in userlist %}
+                <tr>
+                    <td class="d-sm-none d-md-table-cell">{{ user["user_name"] }}</td>
+                    <td class="d-sm-none d-md-table-cell">{{ user["user_email"] if user["user_email"] else "" }}</td>
+                    <td>{{ user["user_first_name"] if user["user_first_name"] else "" }} {{ user["user_last_name"] if user["user_last_name"] else "" }}</td>
+                    <td>{{ user["user_role"] if user["user_role"] else "" }}</td>
+                    <td>
+                        <a href="/manage_user/{{ user['user_id'] }}" class="bg-texture-1 small badge badge-primary m-1 py-2 px-3">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    
+</div>
+
+</div>
+
+{% endblock %}

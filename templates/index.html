@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block main %}
+    <main role="main">
+        <div class="jumbotron m-5 mx-auto p-5 bg-darker border border-darker">
+            <div class="mx-auto row mb-5">
+
+                <div class="col-lg my-5 p-3">
+                    <img src="/static/svg/bugfix-illustration.svg" class="img-fluid my-3 mb-5">
+                </div>
+                
+                <div class="col-lg my-auto text-center">
+                    <h1 class="display-4 my-3">Welcome to<br>Bug Tracker</h1>
+                    <span class="lead my-2">Manage all your projects in one place. Track bugs and feature requests, and never forget an issue again.</span><br><br>
+                    <p>
+                        <a class="btn btn-primary" href="/login" role="button">Try it now! &raquo;</a>
+                    </p>
+                </div>
+                
+            </div>
+            <p class="text-muted small mb-0 mb-n3">New features are planned for future releases including setting up sprints with deadlines, quick messaging for each ticket to let project members and developers can share ideas, and a history log to track updates and progress to projects.</p>
+        </div>
+    </main>
+{% endblock %}

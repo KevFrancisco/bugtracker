@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/bootstrap-table.min.css">
+<script src="/static/js/bootstrap-table.min.js"></script>
+
+<script src="/static/js/bootstrap-validate.js"></script>
+<script src="/static/js/jquery.slimscroll.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('.fixed-table-body').slimScroll({
+        height: "297px"
+    });
+    });
+</script>
+{% endblock %}
+
+{% block title %}
+    Manage Ticket
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md my-auto mx-3 bg-secondary p-5 border-radius-slanted">
+            <div class="my-auto">
+                <img src="/static/svg/manage_ticket_illustration.svg">
+            </div>
+        </div>
+        <div class="col-md-6 my-auto mx-3">
+            <div class="mb-3 mt-3">
+                <h3 class="mb-0">Manage Ticket<img class="mb-1 ml-2" src="/static/svg/register-icon.svg" height="28" width="28"></h3>
+            </div>
+            <form id="createticketform" action="/manage_ticket/{{ thisticket.tck_id }}" method="post" class="form-signin text-left needs-validation mt-3">
+                
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_proj_id" class="mb-1">Project</label>
+                            <select id="f_tck_proj_id" name="f_tck_proj_id" class="form-control bv-req" required>
+                                {% for p in projectslist %}
+                                    <option value="{{ p['proj_id'] }}" {{ "selected='selected'" if p.proj_id==thisticket.tck_proj_id else '' }}>{{ p.proj_name }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                    <div class="form-group col my-1">
+                        <label for="f_tck_title" class="mb-1">Ticket Title</label>
+                        <input id="f_tck_title" autocomplete="off" autofocus class="form-control bv-req bv-min5 bv-max50 bv-min5 bv-alphaspacenum" name="f_tck_title" placeholder="Ticket Title" type="text" value="{{ thisticket.tck_title }}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group col my-1">
+                        <label for="f_tck_desc" class="mb-1">Ticket Description</label>
+                        <textarea id="f_tck_desc" class="form-control bv-alphaspacenumarea bv-req bv-min5 bv-max555" name="f_tck_desc" placeholder="Project Description" type="text" rows="5" required>{{ thisticket.tck_desc }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_type" class="mb-1">Type</label>
+                            <select id="f_tck_type" name="f_tck_type" class="form-control bv-req" required>
+                                <option value="Bug Report" {{ "selected='selected'" if thisticket.tck_type=='Bug Report' else '' }}>Bug Report</option>
+                                <option value="Feature Request" {{ "selected='selected'" if thisticket.tck_type=='Feature Request' else '' }}>Feature Request</option>
+                                <option value="Other Comments" {{ "selected='selected'" if thisticket.tck_type=='Other Comments' else '' }}>Other Comments</option>
+                                <option value="Documentation Request" {{ "selected='selected'" if thisticket.tck_type=='Documentation Request' else '' }}>Documentation Request</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_prio" class="mb-1">Priority</label>
+                            <select id="f_tck_prio" name="f_tck_prio" class="form-control bv-req" required>
+                                <option value="Critical" class="text-danger" {{ "selected='selected'" if thisticket.tck_prio=='Critical' else '' }}>Critical</option>
+                                <option value="High" {{ "selected='selected'" if thisticket.tck_prio=='High' else '' }}>High</option>
+                                <option value="Medium" {{ "selected='selected'" if thisticket.tck_prio=='Medium' else '' }}>Medium</option>
+                                <option value="Low" {{ "selected='selected'" if thisticket.tck_prio=='Low' else '' }}>Low</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_status" class="mb-1">Status</label>
+                            <select id="f_tck_status" name="f_tck_status" class="form-control bv-req" required>
+                                <option value="New" {{ "selected='selected'" if thisticket.tck_status=='New' else '' }}>New</option>
+                                <option value="Open" {{ "selected='selected'" if thisticket.tck_status=='Open' else '' }}>Open</option>
+                                <option value="Unresolved" {{ "selected='selected'" if thisticket.tck_status=='Unresolved' else '' }}>Unresolved</option>
+                                <option value="In Progress" {{ "selected='selected'" if thisticket.tck_status=='In Progress' else '' }}>In Progress</option>
+                                <option value="Resolved" class="text-success" {{ "selected='selected'" if thisticket.tck_status=='Resolved' else '' }}>Resolved</option>
+                                <option value="More Details Required" class="text-danger" {{ "selected='selected'" if thisticket.tck_status=='More Details Required' else '' }}>More Details Required</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_submitter" class="mb-1">Submitter</label>
+                            <select id="f_tck_submitter" name="f_tck_submitter" class="form-control bv-req" required>
+                                {% for su in subuserlist %}
+                                    <option value="{{ su.user_id }}" {{ "selected='selected'" if thisticket.tck_submitter == su.user_id else '' }}>{{ su.user_first_name + ' ' + su.user_last_name }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+
+                    <div class="form-group col w-100 my-1">
+                        <label for="f_tck_developer" class="mb-1">Developer</label>
+                            <select id="f_tck_developer" name="f_tck_developer" class="form-control bv-req" required>
+                                {% for du in devuserlist %}
+                                    <option value="{{ du.user_id }}" {{ "selected='selected'" if thisticket.tck_developer == du.user_id else 'nawp' }}>{{ du.user_first_name + ' ' + du.user_last_name }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col w-100 my-1 text-muted text-right my-2">
+                        Date Filed: {{ thisticket.tck_created.strftime("%b %d, %Y - %H:%M:%S") }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group my-3 col text-center">
+                        <button id="bv-submit" class="btn btn-primary d-inline-block" type="submit">File Ticket</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+<script src="/static/js/ticket-new-validate.js"></script>
+{% endblock %}

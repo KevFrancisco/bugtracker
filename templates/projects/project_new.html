@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Title
+{% endblock %}
+
+{% block head %}
+<script src="/static/js/bootstrap-validate.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md my-auto mx-3 bg-secondary p-5 border-radius-slanted">
+            <div class="my-auto">
+                <img src="/static/svg/project-new-illustration.svg">
+            </div>
+        </div>
+        <div class="col-md-5 my-auto mx-3">
+            <div class="mb-3 mt-3">
+                <h3 class="mb-0">Create New Project<img class="mb-1 ml-2" src="/static/svg/register-icon.svg" height="28" width="28"></h3>
+            </div>
+            <form id="createprojectform" action="/projects/new" method="POST" enctype=multipart/form-data class="form-signin text-left needs-validation mt-3">
+
+                <div class="form-row px-2">
+                    <div class="form-group col my-1">
+                        <label for="f_proj_name" class="mb-1">Project Name</label>
+                        <input id="f_proj_name" autocomplete="off" autofocus class="form-control" name="f_proj_name" placeholder="Project Name" type="text" required>
+                    </div>
+                </div>
+
+                <div class="form-row px-2">
+                    <div class="col">
+                        <div class="card bg-darker mx-3 my-2 px-3 py-2 m-0">
+                            <label class="my-1">Project Image<span class="small text-muted text-right"> - Limited to .png and 2MB file size.</span>
+                            <div id="input_wrapper" class="col custom-file">
+                                <input id="f_proj_img" type="file" name="f_proj_img" class="custom-file-input">
+                                <label for="f_proj_img" class="custom-file-label">Project Image</label>
+                            </div>
+                            {# Script to change the show the user the filename selected #}
+                            <script type="text/javascript">
+                            // From Stack Overflow https://www.codeply.com/p/LtpNZllird
+                            document.querySelector('.custom-file-input').addEventListener('change',function(e){
+                                var fileName = document.getElementById("f_proj_img").files[0].name;
+                                var nextSibling = e.target.nextElementSibling
+                                nextSibling.innerText = fileName
+                            })
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row px-2">
+                    <div class="form-group col my-1">
+                        <label for="f_proj_user_id" class="mb-1">Manager</label>
+                            <select id="f_proj_user_id" name="f_proj_user_id" class="form-control" required>
+                                {% for u in userlist %}
+                                    <option value="{{ u['user_id'] }}">{{ u['user_first_name'] + ' ' + u['user_last_name'] }}</option>
+                                {% endfor %}
+                            </select>
+                    </div>
+                </div>
+                
+                <div class="form-row px-2">
+                    <div class="form-group col my-1">
+                        <label for="f_proj_deadline" class="mb-1">Due Date</label>
+                        <input id="f_proj_deadline" class="form-control" name="f_proj_deadline" placeholder="Due Date" type="date" required>
+                    </div>
+                </div>
+                
+                <div class="form-row px-2">
+                    <div class="form-group col my-1">
+                        <label for="f_proj_desc" class="mb-1">Project Description</label>
+                        <textarea id="f_proj_desc" class="form-control" name="f_proj_desc" placeholder="Project Description" type="text" rows="3" required></textarea>
+                    </div>
+                </div>
+
+
+
+                <div class="form-row px-2">
+                    <div class="form-group my-3 col text-center">
+                        <button id="btn-new-project" class="btn btn-primary d-inline-block" disabled="true" type="submit">Create Project</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+<script src="/static/js/project-new-validate.js"></script>
+
+{% endblock %}
