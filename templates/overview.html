@@ -100,14 +100,13 @@ Color List:
                     height: 500,
                     legend: {
                         position: 'top',
-                        alignment: 'center',
                         maxLines: 2,
                         textStyle: {
                             'color':'white',
                             'fontName': 'BenchNine',
                             'maxLines': 2,
                             'fontSize': 18
-                        },
+                        }
                     },
                     hAxis: {
                         minorGridlines: {
@@ -127,7 +126,7 @@ Color List:
                         slantedText: true,
                         slantedTextAngle: 90
                     },
-                    vAxis: {
+                    vAxis: {I
                         minorGridlines: {
                             'color':'none'
                         },
@@ -139,7 +138,7 @@ Color List:
                     chartArea: {
                         top: '20%',
                         left: 'auto',
-                        width:'85%',
+                        width:'90%',
                         height:'55%'
                     }
             };
@@ -190,7 +189,7 @@ Color List:
                 '{{ p.proj_name }}',
                 {{ p.proj_tickets | selectattr('tck_status', '!=', 'Resolved')| selectattr('tck_type', 'equalto', 'Bug Report')|list|count }},
                 '/tickets/search/{{ p.proj_id }}/type/Bug Report',
-                'cursor: pointer; stroke-color: #FFFFFF; stroke-width: 2;'
+                'stroke-color: #FFFFFF; stroke-width: 2;'
             ],
             {% endfor %}
         ]);
@@ -221,7 +220,7 @@ Color List:
                         },
                         chartArea: {
                             top: 'auto',
-                            width:'85%',
+                            width:'90%',
                             height:'60%'
                         }
                     };
@@ -567,7 +566,7 @@ $(document).ready(function () {
     <div class="row">
         <div class="col-lg-6 m-0 p-3 w-100 h-100">
             <div class="h1 my-3">Project Tickets</div>
-            <div id="chart_div1" class="chart-responsive h-auto"></div>
+            <div id="chart_div1" class="chart-responsive"></div>
         </div>
 
         <div class="col-lg-6 m-0 p-3 w-100">

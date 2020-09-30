@@ -149,7 +149,11 @@ a.nav-link:hover {
   height: auto;
 }
 
-g path, g { cursor: pointer; }
+
+/* See Reference: http://jsfiddle.net/Praveen16oct90/GM9sb/5/ */
+g path, g g g rect { 
+  cursor: pointer;
+}
 
 /* .project-card {
   transform: scale(1.15) translateY(-15%);
@@ -190,6 +194,26 @@ g path, g { cursor: pointer; }
   text-shadow: 2px 2px 0.15em black;
 }
 
+.text-shadow-subtle {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5) !important;
+}
+.text-shadow-bug {
+  text-shadow: 2px 1px 3px rgba(0, 0, 0, 0.6) !important;
+}
+
+.box-shadow-1 {
+  box-shadow: 2px 2px 0.1em black;
+}
+
+.bug-deviant {
+  transform: rotate(18deg) scale(1.5) translateY(3px);
+}
+
 .img-flip-hor {
   transform: scaleX(-1);
+}
+
+a.nav-link:hover {
+  color: skyblue !important;
+  font-weight: lighter !important;
 }

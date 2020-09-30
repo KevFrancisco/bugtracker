@@ -25,7 +25,7 @@ I also tracked bugs and feature requests to Bug Tracker _using itself_, which I 
 
 The main object in Bug Tracker are tickets, which lists all the details regarding an issue. Contrary to it's name, a ticket can be of other types aside from a Bug Report. It also has other relevant properties like status, and priority.
 
-####Ticket Type:
+#### Ticket Type:
 * Bug Report
 * Feature Request
 * Other Comment
@@ -56,5 +56,24 @@ Tickets belong to a project, and without a project a ticket cannot be made. A pr
 * Create new tickets
 
 ---
+## Tools Used
+* Flask - https://getbootstrap.com
+* Bootstrap - https://getbootstrap.com
+* Google Visualization API - https://developers.google.com/chart/interactive/docs
+* Font Awesome - https://font-awesome.com
+* Bootstrap-Table - https://bootstrap-table.com
+* Bootstrap-Validate - https://bootstrap-validate.js.org
+* Slim-Scroll - https://github.com/rochal/jQuery-slimScroll
+* Undraw - https://undraw.co/illustrations
+* Transparent Textures - https://www.transparenttextures.com
+* Subtle Patterns - https://www.toptal.com/designers/subtlepatterns/
+* Stack Overflow (●'◡'●) - https://stackoverflow.com
+
+---
 # Plans for the future of Bug Tracker
-I have plans to make a messaging system to enable developers to share ideas debugging. Another feature is a sprint system to track project goals with deadlines. Also, I am planning to tweak some views, the ticket list in particular can be improved to be more concise and intuitive. Lastly, I will be adding an archive system where resolved tickets and finished projects can be checked for future reference.
+* I have plans to make a messaging system to enable developers to share ideas debugging.
+* Another feature is a sprint system to track project goals with deadlines.
+* Also, I am planning to tweak some views, the ticket list in particular can be improved to be more concise and intuitive.
+* A ticket history will also be added where all changes to a ticket are logged with the following: User who updated the ticket, value changed, and a datetime stamp.
+* Lastly, I will be adding an archive system where resolved tickets and finished projects can be checked for future reference.
+* As for improvements, I will be migrating the authenticating and authorization features to Flask-Admin and Flask-Login respectively.

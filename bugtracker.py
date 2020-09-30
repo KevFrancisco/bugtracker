@@ -642,13 +642,14 @@ def manage_user(url_user_id):
         new_user_email = request.form.get("f_user_email")
         new_user_first_name = request.form.get("f_user_first_name")
         new_user_last_name = request.form.get("f_user_last_name")
-        new_user_role = request.form.get("f_user_role")
+        # Only Admin user role can change other user's roles.
+        if session['user_role'] == 'Admin':
+            user.user_role = request.form.get("f_user_role")
 
         user.user_name = new_user_name
         user.user_email = new_user_email
         user.user_first_name = new_user_first_name
         user.user_last_name = new_user_last_name
-        user.user_role = new_user_role
 
         db.session.commit()
         # Safe to use f-string here bec we validated via javascript
@@ -671,13 +672,8 @@ def delete_user(url_user_id):
     if session["user_role"] == "Admin":
         # If the user is trying to delete himself
         if session["user_id"] == url_user_id:
-            userlist = User.query.with_entities(User.user_id, User.user_name, User.user_first_name, User.user_last_name).all()
-            user = User.query.get(url_user_id)
-
-            return render_template("/users/manage_user.html", 
-                                    msg_error="Your account cannot be deleted while logged in.",
-                                    userlist=userlist, 
-                                    user=user)
+            msg_error="Your account cannot be deleted while logged in.",
+            return redirect(url_for('manage_users', msg_error=msg_error))
 
         # No need to set relationships (orphaned tickets and messages) to null, the ORM handles relationships
         # The relationships were set to Nullable=True in models to be safe
@@ -689,9 +685,8 @@ def delete_user(url_user_id):
         msg_success = "User was succesfully deleted!"
         userlist = User.query.all()
 
-        return render_template('/users/manage_users.html', 
-                                msg_success=msg_success, 
-                                userlist=userlist)
+        return redirect(url_for('manage_users', msg_success=msg_success))
+
     else:
         msg_error = "You do not have authorization to delete a user."
         userlist = User.query.all()
