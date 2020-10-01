@@ -1,6 +1,7 @@
 <!-- Hello! Title -->
 # Bug Tracker
-#### [Live Demo](http://kevfrancisco.pythonanywhere.com/) | [Slides](https://docs.google.com/presentation/d/e/2PACX-1vTsSQdbKXSyJ2t89nx7W3PFbwsUERJZbSpfmCLu1KBPbK_0SqeaI3X9x5lyGqWxypBrKtpw_zXXj8EW/pub?start=false&loop=false&delayms=5000)
+#### [Live Demo](http://kevfrancisco.pythonanywhere.com/) | [Slides](https://docs.google.com/presentation/d/e/2PACX-1vTsSQdbKXSyJ2t89nx7W3PFbwsUERJZbSpfmCLu1KBPbK_0SqeaI3X9x5lyGqWxypBrKtpw_zXXj8EW/pub?start=false&loop=false&delayms=5000) | [Repository](https://github.com/KevFrancisco/bugtracker)
+<!-- Youtube: https://youtu.be/VE7nLzftF_0 -->
 ___
 <!-- Summary -->
 
