@@ -1,0 +1,176 @@
+
+{# #################################### #}
+{# ### Google Chart COLUMN Template ### #}
+{# #################################### #}
+<script type="text/javascript">
+    google.charts.load('current', {packages: ['corechart', 'bar']});
+    google.charts.setOnLoadCallback(drawBasic);
+
+    function drawBasic() {
+    
+        var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Status');
+            data.addColumn('number', 'Slices');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'link'});
+            data.addColumn('number', 'Slices 2');
+            data.addColumn({type: 'string', role: 'style'});
+            data.addColumn({type: 'string', role: 'link'});
+            
+            data.addRows([
+                ['Unresolved', 4, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Critical'],
+                ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 1, 'color: #5bc0de; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Critical'],
+                ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 5, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/priority/Critical'],
+                ['More Details Required', 1, 'color: #5bc0de; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/type/Bug Report', 3, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF; stroke-width: 2;', '/tickets/search/status/Critical']
+            ]);
+        /*
+        var data = google.visualization.arrayToDataTable([
+            ['Status', 'Count', { role: 'style' }, { role: 'annotation' } ],
+            ['Unresolved', 2, 'color: #d9534f; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Cu' ],
+            ['In Progress', 1, 'color: #f0ad4e; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Ag' ],
+            ['Resolved', 3, 'color: #5cb85c; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Au' ],
+            ['More Details Required', 1, 'color: #333333; stroke-opacity: 1; stroke-color: #FFFFFF;', 'Pt' ]
+        ]);
+        */
+
+          var options = {
+                    'backgroundColor':'none',
+                    colors: ['#4e5d6c','#5cb85c', '#5bc0de', '#f0ad4e', '#d9534f', '#333333', '#DDDDDD', '#bd5916'],
+                    bar: {
+                        groupWidth: "90%"
+                    },
+                    legend: {
+                        position: 'none',
+                        alignment: 'center'
+                    },
+                    hAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textStyle: {
+                        'color':'white',
+                        'fontName': 'Lato',
+                        'fontSize': 12
+                        },
+                        textPosition: 'in',
+                        maxAlternation: 4,
+                        maxTextLines: 3
+                    },
+                    vAxis: {
+                        minorGridlines: {
+                            'color':'none'
+                        },
+                        gridlines: {
+                            'color':'none'
+                        },
+                        textPosition: 'none'
+                    },
+                    bar: {
+                        groupWidth: "80%"
+                    },
+                    chartArea: {
+                        width:'85%',
+                        height:'85%'
+                    }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+            
+            // Adding Links to data: https://stackoverflow.com/questions/6205621/how-to-add-links-in-google-chart-api
+            google.visualization.events.addListener(chart, 'select', function (e) {
+                var selection = chart.getSelection();
+                    console.log(selection)
+                    console.log(selection[0].column)
+                    // selection.length is 1, and 1 is True. Cool.
+                    if (selection.length) {
+                        var row = selection[0].row;
+                        console.log(row);
+                        let link_col = (selection[0].column) + 2;
+                        console.log(link_col);
+                        let link = data.getValue(row, selection[0].column + 2);
+                        //location.href = link;
+                        console.log(link);
+                    }
+                });
+
+            chart.draw(data, options);
+        }
+</script>
+
+
+{# ######################### #}
+{# Google Chart DONUT Template #}
+{# ######################### #}
+<script type="text/javascript">
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+    function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addColumn({type: 'string', role: 'link'});
+        data.addColumn({type: 'string', role: 'style'});
+
+        data.addRows([
+            ['Projects', 7, '/projects', 'cursor: pointer;'],
+            ['Tickets', 3, '/projects', 'cursor: pointer;'],
+            ['Bug Reports', 18, '/projects', 'cursor: pointer;'],
+            ['Feature Requests', 3, '/projects', 'cursor: pointer;']
+        ]);
+
+        // Set chart options
+        var options = {'backgroundColor':'none',
+                        colors: ['#5cb85c', '#5bc0de', '#f0ad4e', '#d9534f', '#333333', '#DDDDDD', '#bd5916', '#4e5d6c'],
+                        pieHole: 0.5,
+                        pieSliceText: 'value',
+                        tooltip: {
+                            ignoreBounds: false
+                        },
+                        pieSliceTextStyle: {
+                            'color':'white',
+                            'fontName': 'Lato',
+                            'fontSize': 16
+                        },
+                        legend: {
+                            textStyle: {
+                                'color':'white',
+                                'fontName': 'Lato',
+                                'fontSize': 12
+                            },
+                            alignment: 'center',
+                            position: 'right',
+                        },
+                        chartArea: {
+                            width:'85%',
+                            height:'85%'
+                        }
+                    };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chartpie = new google.visualization.PieChart(document.getElementById('chart_div4'));
+        google.visualization.events.addListener(chartpie, 'select', function (e) {
+                    var selection = chartpie.getSelection();
+                        if (selection.length) {
+                            var row = selection[0].row;
+                            let link = data.getValue(row, 2);
+                            location.href = link;
+                        }
+                    });
+        // google.visualization.events.addListener(chartpie, 'onmouseover', mouseHandlerPointer1);                 
+        // google.visualization.events.addListener(chartpie, 'onmouseout', mouseHandlerDefault1);
+
+        chartpie.draw(data, options);
+    }
+</script>
