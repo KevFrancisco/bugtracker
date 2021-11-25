@@ -3,5 +3,5 @@ Bug Tracker Notes.odt
 bugtracker.code-workspace
 .vscode
 __pycache__
-/* venv_new */
-/* venv-ubuntu */
+venv_new
+venv-ubuntu
