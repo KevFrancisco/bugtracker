@@ -39,6 +39,7 @@ class User(db.Model):
 # Projet Model, it will be linked to a single manager [User]
 # with many tickets
 class Project(db.Model):
+    """ Project Class, id, user_id, name, desc, deadline, tickets """
     proj_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     # A project MUST have a Project Manager! nullable=True, we update it to null for when a user is deleted
     proj_user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=True)
